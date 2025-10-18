@@ -21,15 +21,15 @@ class MeteoKafkaProducer:
 
 
     def fetch_meteo_data(self):
-            """
-            Récupère les données météo depuis l'API Open Data.
-            :return: liste de mesures (dictionnaires)
-            """
-            response = requests.get(self.api_url)
-            print("response {}".format(response.json()))
-            response.raise_for_status()
-            data = response.json()
-            return data.get('results', [])
+        """
+        Récupère les données météo depuis l'API Open Data.
+        :return: liste de mesures (dictionnaires)
+        """
+        response = requests.get(self.api_url)
+        print("response {}".format(response.json()))
+        response.raise_for_status()
+        data = response.json()
+        return data.get('results', [])
 
     def send_to_kafka(self, data):
         """
