@@ -1,8 +1,6 @@
 from extract import MeteoKafkaProducer
 from consume import MeteoKafkaConsumer
 
-from kafka import KafkaConsumer
-import json
 
 
 KAFKA_BROKER = 'localhost:9092'

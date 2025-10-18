@@ -1,0 +1,29 @@
+# Version Python cible
+target-version = "py310"
+
+# Corriger automatiquement les erreurs que Ruff peut fixer
+fix = true
+
+# Longueur maximale d'une ligne
+line-length = 88
+
+# Règles à appliquer (sélection de base)
+lint.select = [
+    "E",    # Erreurs de style PEP8
+    "F",    # Erreurs de code (fautes Python)
+    "W",    # Avertissements
+    "C90"   # Complexité (mccabe)
+]
+
+# Fichiers/dossiers à ignorer
+extend-exclude = [
+    ".git",
+    "__pycache__",
+    "venv",
+    "env",
+    ".venv"
+]
+
+# Ignorer certaines erreurs dans des fichiers spécifiques
+[lint.per-file-ignores]
+"__init__.py" = ["F401"]  # import non utilisé dans __init__.py

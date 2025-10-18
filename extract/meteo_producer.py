@@ -12,7 +12,7 @@ class MeteoKafkaProducer:
         self.topic = topic
         self.api_url = api_url
         self.interval = interval
-        
+
         # Initialisation du producer Kafka
         self.producer = KafkaProducer(
             bootstrap_servers=[self.kafka_broker],
