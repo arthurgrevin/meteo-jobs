@@ -1,6 +1,6 @@
 from extract import MeteoKafkaProducer
 
-print("start")
+print("Start Producer")
 
 if __name__ == "__main__":
     KAFKA_BROKER = 'localhost:9092'
