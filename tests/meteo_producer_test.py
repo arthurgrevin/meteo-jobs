@@ -1,8 +1,6 @@
 from extract import MeteoKafkaProducer
 from consume import MeteoKafkaConsumer
 
-
-
 KAFKA_BROKER = 'localhost:9092'
 API_URL = "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/00-station-meteo-toulouse-valade/records?limit=1"
 TOPIC = "test_meteo_toulouse"
@@ -64,7 +62,7 @@ def test_send_to_kafka():
     Kafka producer should be able to send data to Kafka
     """
     producer.send_to_kafka(records_test)
-    consumer = MeteoKafkaConsumer(KAFKA_BROKER, TOPIC)
+    consumer = MeteoKafkaConsumer(KAFKA_BROKER, TOPIC, auto_offset_reset="latest")
     try:
         for message in consumer.consumer:
             value = message.value
