@@ -1,5 +1,5 @@
 from extract import MeteoKafkaProducer
-from consume import MeteoKafkaConsumer
+from consumer import MeteoKafkaConsumer
 
 KAFKA_BROKER = 'localhost:9092'
 API_URL = "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/00-station-meteo-toulouse-valade/records?limit=1"
