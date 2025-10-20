@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - consumer python class to consume kafka topic.
 - requirements.txt for python dependencies.
 - Add integration tests meteo_producer
+- Upsert to Postgres using iterator
 
 
 ### Changed
-
