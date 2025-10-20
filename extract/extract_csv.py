@@ -8,7 +8,7 @@ class ExtractMeteoDataCSV(ExtractAPI):
         super().__init__(api_url)
 
 
-    def fetch_data(self, delimiter, ):
+    def fetch_data(self, delimiter=";"):
         response = super().fetch_data(is_stream=True)
         lines = (line.decode("utf-8-sig") for line in response.iter_lines() if line)
 
@@ -19,21 +19,22 @@ class ExtractMeteoDataCSV(ExtractAPI):
         for record in records:
             meteo = Meteo(
                 data = record["data"],
-                id = record["id"],
-                humidite = record["humidite"],
+                id = int(record["id"]),
+                humidite = int(record["humidite"]),
                 direction_du_vecteur_de_vent_max =
-                    record["direction_du_vecteur_de_vent_max"],
-                pluie_intensite_max = record["pluie_intensite_max"],
-                pression = record["pression"],
+                    int(record["direction_du_vecteur_de_vent_max"]),
+                pluie_intensite_max = float(record["pluie_intensite_max"]),
+                pression = int(record["pression"]),
                 direction_du_vecteur_vent_moyen =
-                    record["direction_du_vecteur_vent_moyen"],
+                    int(record["direction_du_vecteur_vent_moyen"]),
                 type_de_station = record["type_de_station"],
-                pluie = record["pluie"],
+                pluie = float(record["pluie"]),
                 direction_du_vecteur_de_rafale_de_vent_max =
-                    record["direction_du_vecteur_de_rafale_de_vent_max"],
-                force_moyenne_du_vecteur_vent = record["force_moyenne_du_vecteur_vent"],
-                force_rafale_max = record["force_rafale_max"],
-                temperature = record["temperature"],
+                float(record["direction_du_vecteur_de_rafale_de_vent_max"]),
+                force_moyenne_du_vecteur_vent =
+                    int(record["force_moyenne_du_vecteur_vent"]),
+                force_rafale_max = int(record["force_rafale_max"]),
+                temperature = float(record["temperature"]),
                 heure_de_paris = record["heure_de_paris"],
                 heure_utc = record["heure_utc"]
             )
