@@ -31,15 +31,8 @@ def test_load_record():
     """
     It should be able to upsert record to postgres
     """
-    loader.upsert_records(records_test)
+    loader.upsert_records(iter(records_test))
     records = loader.read_meteo_table()
     print(records)
     assert len(records) == 1
     loader.close()
-
-
-
-
-
-
-

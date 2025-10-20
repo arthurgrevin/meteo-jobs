@@ -1,5 +1,53 @@
 import psycopg2
 from psycopg2.extras import execute_values
+from itertools import islice
+
+
+QUERY_CREATE_TABLE = """
+    CREATE TABLE IF NOT EXISTS meteo_data (
+                id SERIAL PRIMARY KEY,
+                data_id VARCHAR(255),
+                direction_du_vecteur_de_vent_max INT,
+                pluie_intensite_max FLOAT,
+                type_de_station VARCHAR(255),
+                direction_du_vecteur_de_vent_max_en_degres FLOAT,
+                force_moyenne_du_vecteur_vent INT,
+                force_rafale_max INT,
+                temperature_en_degre_c FLOAT,
+                humidite INT,
+                pression INT,
+                pluie FLOAT,
+                heure_utc TIMESTAMP,
+                heure_de_paris TIMESTAMP,
+                direction_du_vecteur_vent_moyen INT,
+                UNIQUE (data_id, heure_utc)
+            );
+"""
+
+QUERY_UPSERT_RECORDS = """
+INSERT INTO meteo_data (
+            data_id,
+            direction_du_vecteur_de_vent_max,
+            pluie_intensite_max,
+            type_de_station,
+            direction_du_vecteur_de_vent_max_en_degres,
+            force_moyenne_du_vecteur_vent,
+            force_rafale_max,
+            temperature_en_degre_c,
+            humidite,
+            pression,
+            pluie,
+            heure_utc,
+            heure_de_paris,
+            direction_du_vecteur_vent_moyen
+        )
+        VALUES %s
+        ON CONFLICT (data_id, heure_utc) DO NOTHING
+"""
+
+QUERY_READ_TABLE = "SELECT * FROM meteo_data"
+
+
 
 class MeteoPostgresLoader:
     """
@@ -18,61 +66,7 @@ class MeteoPostgresLoader:
         print("Connected to PostgreSQL")
         self._create_table()
 
-    def _create_table(self):
-        """Create table is does not exist"""
-        query = """
-        CREATE TABLE IF NOT EXISTS meteo_data (
-            id SERIAL PRIMARY KEY,
-            data_id VARCHAR(255),
-            direction_du_vecteur_de_vent_max INT,
-            pluie_intensite_max FLOAT,
-            type_de_station VARCHAR(255),
-            direction_du_vecteur_de_vent_max_en_degres FLOAT,
-            force_moyenne_du_vecteur_vent INT,
-            force_rafale_max INT,
-            temperature_en_degre_c FLOAT,
-            humidite INT,
-            pression INT,
-            pluie FLOAT,
-            heure_utc TIMESTAMP,
-            heure_de_paris TIMESTAMP,
-            direction_du_vecteur_vent_moyen INT,
-            UNIQUE (data_id, heure_utc)
-        );
-        """
-        with self.conn.cursor() as cur:
-            cur.execute(query)
-
-    def upsert_records(self, records):
-        """
-        Upsert records
-        :param records: list[dict]
-        """
-        if not records:
-            print("No records to upsert")
-            return
-
-        query = """
-        INSERT INTO meteo_data (
-            data_id,
-            direction_du_vecteur_de_vent_max,
-            pluie_intensite_max,
-            type_de_station,
-            direction_du_vecteur_de_vent_max_en_degres,
-            force_moyenne_du_vecteur_vent,
-            force_rafale_max,
-            temperature_en_degre_c,
-            humidite,
-            pression,
-            pluie,
-            heure_utc,
-            heure_de_paris,
-            direction_du_vecteur_vent_moyen
-        )
-        VALUES %s
-        ON CONFLICT (data_id, heure_utc) DO NOTHING
-        """
-
+    def _get_values(self, records):
         values = [
             (
                 r.get("data"),
@@ -92,21 +86,39 @@ class MeteoPostgresLoader:
             )
             for r in records
         ]
+        return values
 
-        print(values)
-
+    def _create_table(self):
+        """Create table is does not exist"""
         with self.conn.cursor() as cur:
-            execute_values(cur, query, values)
-        print(f"{len(records)} records upsert in PostgreSQL")
+            cur.execute(QUERY_CREATE_TABLE)
+
+    def upsert_records(self, records, batch_size=10000):
+        """
+        Upsert records
+        :param records: iterator[dict]
+        """
+        if not records:
+            print("No records to upsert")
+            return
+        while True:
+            batch = list(islice(records, batch_size))
+            if not batch:
+                break
+            values = self._get_values(batch)
+
+            with self.conn.cursor() as cur:
+                execute_values(cur, QUERY_UPSERT_RECORDS, values)
+            print(f"{len(batch)} records upsert in PostgreSQL")
+        print("End of upsert")
 
 
     def read_meteo_table(self):
         """
         Read meteo from postgres table
         """
-        query = "SELECT * FROM meteo_data"
         with self.conn.cursor() as cur:
-            cur.execute(query)
+            cur.execute(QUERY_READ_TABLE)
             rows = cur.fetchall()
         return rows
 
