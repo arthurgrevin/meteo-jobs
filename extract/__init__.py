@@ -1,3 +1,3 @@
 from .meteo_producer import MeteoKafkaProducer
-
-__all__ = ['MeteoKafkaProducer']
+from .extract_csv import ExtractMeteoDataCSV
+__all__ = ['MeteoKafkaProducer', 'ExtractMeteoDataCSV']
