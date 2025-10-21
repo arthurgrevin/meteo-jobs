@@ -14,3 +14,10 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
+
+
+### Build container
+docker build -t .
+
+### Run container
+docker run -it --env-file .env --network meteo_jobs_default meteo_jobs
