@@ -1,6 +1,6 @@
 from .extract_api import ExtractAPI
 import csv
-from models import Meteo
+from meteo_jobs.models import Meteo
 
 class ExtractMeteoDataCSV(ExtractAPI):
 
