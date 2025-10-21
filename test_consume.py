@@ -1,4 +1,4 @@
-from consume import MeteoKafkaConsumer
+from consumer import MeteoKafkaConsumer
 
 if __name__ == "__main__":
     KAFKA_BROKER = 'localhost:9092'
