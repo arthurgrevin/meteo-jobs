@@ -9,12 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- kafka set up with docker-compose
-- producer python class to ingest to kafka topic.
-- consumer python class to consume kafka topic.
+- postgres up with docker-compose
+- Class to ingest Meteo data to Postgres
+- Class to extract Meteo data from API using iterator.
 - requirements.txt for python dependencies.
-- Add integration tests meteo_producer
+- Add integration tests
 - Upsert to Postgres using iterator
+- Add Dockerfile to build docker to run EL process
 
 
 ### Changed
