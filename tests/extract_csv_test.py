@@ -1,4 +1,4 @@
-from extract import ExtractMeteoDataCSV
+from meteo_jobs.extract import ExtractMeteoDataCSV
 
 
 
