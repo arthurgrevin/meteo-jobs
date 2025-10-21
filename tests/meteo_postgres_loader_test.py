@@ -1,5 +1,5 @@
-from load import MeteoPostgresLoader
-from models import Meteo
+from meteo_jobs.load import MeteoPostgresLoader
+from meteo_jobs.models import Meteo
 import pytest
 
 

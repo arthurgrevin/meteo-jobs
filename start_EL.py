@@ -1,11 +1,11 @@
-from extract import ExtractMeteoDataCSV
-from load import MeteoPostgresLoader
+from meteo_jobs.extract import ExtractMeteoDataCSV
+from meteo_jobs.load import MeteoPostgresLoader
 import os
 
 print("Start Extract and Load Meteo Data to Postgres")
 
 if __name__ == "__main__":
-    
+
     STATION = os.getenv("STATION")
     DB_HOST = os.getenv("DB_HOST")
     DB_PORT = os.getenv("DB_PORT")
