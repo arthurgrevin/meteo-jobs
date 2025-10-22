@@ -1,4 +1,4 @@
-from meteo_jobs.load import MeteoPostgresLoader
+from meteo_jobs.load import PostGresConnectorMeteo, Loader
 from meteo_jobs.models import Meteo
 import pytest
 
@@ -19,13 +19,13 @@ records_test = [{'data': '0195236c9af000002c882c00',
                'heure_de_paris': '2021-12-21T06:30:00+00:00',
                'heure_utc': '2021-12-21T06:30:00+00:00'}]
 
-loader = MeteoPostgresLoader(
+loader = Loader(PostGresConnectorMeteo(
         host="localhost",
         port=5432,
         dbname="meteo_db_test",
         user="meteo_user",
         password="meteo_pass"
-    )
+    ))
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -43,7 +43,7 @@ def test_load_record():
     It should be able to upsert record to postgres
     """
     loader.upsert_records(iter(records_test))
-    records = loader.read_meteo_table()
+    records = loader.read_data()
     print(records)
     assert len(records) == 1
 
@@ -70,7 +70,7 @@ def test_load_meteo():
     )
     meteos = iter([meteo.__dict__])
     loader.upsert_records(meteos)
-    records = loader.read_meteo_table()
+    records = loader.read_data()
     print(records)
     assert len(records) == 1
     loader.close()
