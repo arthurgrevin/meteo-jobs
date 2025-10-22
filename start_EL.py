@@ -1,4 +1,4 @@
-from meteo_jobs.extract import ExtractMeteoDataCSV
+from meteo_jobs.extract import Extract, ExtractMeteoDataCSV
 from meteo_jobs.load import MeteoPostgresLoader
 import os
 
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     DB_USER = os.getenv("DB_USER")
     DB_PASSWD = os.getenv("DB_PASSWD")
     api_url =  f"https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/{STATION}/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B"
-    extract = ExtractMeteoDataCSV(api_url)
+    extract = Extract(ExtractMeteoDataCSV(api_url))
     connector = MeteoPostgresLoader(
         host = DB_HOST,
         port = DB_PORT,
@@ -22,7 +22,7 @@ if __name__ == "__main__":
         password = DB_PASSWD
 
     )
-    records = extract.fetch_data()
+    records = extract.fetch_data(options = {'delimiter':";"})
     meteos = extract.parse_data(records)
     connector.upsert_records(records)
     connector.close()
