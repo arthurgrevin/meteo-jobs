@@ -65,7 +65,6 @@ class MeteoPostgresLoader:
             password=password
         )
         self.conn.autocommit = True
-        print("Connected to PostgreSQL")
         self._create_table()
 
     def _get_values(self, records: Iterator[Meteo]) -> list:
