@@ -19,10 +19,10 @@ QUERY_CREATE_TABLE = """
                 humidite INT,
                 pression INT,
                 pluie FLOAT,
-                heure_utc TIMESTAMP,
-                heure_de_paris TIMESTAMP,
+                heure_utc VARCHAR(255),
+                heure_de_paris VARCHAR(255),
                 direction_du_vecteur_vent_moyen INT,
-                UNIQUE (data_id, heure_utc)
+                UNIQUE (data_id)
             );
 """
 
@@ -44,7 +44,7 @@ INSERT INTO meteo_data (
             direction_du_vecteur_vent_moyen
         )
         VALUES %s
-        ON CONFLICT (data_id, heure_utc) DO NOTHING
+        ON CONFLICT (data_id) DO NOTHING
 """
 
 QUERY_READ_TABLE = "SELECT * FROM meteo_data"

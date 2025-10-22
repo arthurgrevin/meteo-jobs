@@ -1,18 +1,32 @@
 from meteo_jobs.extract import Extract, ExtractMeteoDataCSV
 from meteo_jobs.load import MeteoPostgresLoader
 import os
+import argparse
+
 
 print("Start Extract and Load Meteo Data to Postgres")
 
 if __name__ == "__main__":
 
-    STATION = os.getenv("STATION")
     DB_HOST = os.getenv("DB_HOST")
     DB_PORT = os.getenv("DB_PORT")
     DB_NAME = os.getenv("DB_NAME")
     DB_USER = os.getenv("DB_USER")
     DB_PASSWD = os.getenv("DB_PASSWD")
-    api_url =  f"https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/{STATION}/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B"
+
+    parser = argparse.ArgumentParser(description="Extract and Load Meteo")
+    parser.add_argument(
+        "--station",
+        type=str,
+        default="00-station-meteo-toulouse-valade",
+        help="enter station name"
+    )
+
+    args = parser.parse_args()  # parse les arguments
+    if args.station:
+        station = args.station
+
+    api_url =  f"https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/{station}/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B"
     extract = Extract(ExtractMeteoDataCSV(api_url))
     connector = MeteoPostgresLoader(
         host = DB_HOST,
