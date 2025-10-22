@@ -21,3 +21,4 @@ class ExtractAPI(Protocol):
         """
             parse data to a model
         """
+        return records
