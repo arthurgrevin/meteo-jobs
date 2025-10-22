@@ -1,6 +1,8 @@
 import psycopg2
 from psycopg2.extras import execute_values
 from itertools import islice
+from meteo_jobs.models import Meteo
+from typing import Iterator
 
 
 QUERY_CREATE_TABLE = """
@@ -66,7 +68,7 @@ class MeteoPostgresLoader:
         print("Connected to PostgreSQL")
         self._create_table()
 
-    def _get_values(self, records):
+    def _get_values(self, records: Iterator[Meteo]) -> list:
         values = [
             (
                 r.get("data"),
@@ -88,12 +90,12 @@ class MeteoPostgresLoader:
         ]
         return values
 
-    def _create_table(self):
+    def _create_table(self) -> None:
         """Create table is does not exist"""
         with self.conn.cursor() as cur:
             cur.execute(QUERY_CREATE_TABLE)
 
-    def upsert_records(self, records, batch_size=10000):
+    def upsert_records(self, records, batch_size=10000) -> None:
         """
         Upsert records
         :param records: iterator[dict]
@@ -113,7 +115,7 @@ class MeteoPostgresLoader:
         print("End of upsert")
 
 
-    def read_meteo_table(self):
+    def read_meteo_table(self) -> list:
         """
         Read meteo from postgres table
         """
@@ -123,7 +125,7 @@ class MeteoPostgresLoader:
         return rows
 
 
-    def close(self):
+    def close(self) -> None:
         """Close Database connection"""
         if self.conn:
             self.conn.close()

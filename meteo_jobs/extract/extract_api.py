@@ -1,13 +1,13 @@
 import requests
+from typing import Protocol, Iterator
 
+class ExtractAPI(Protocol):
 
-class ExtractAPI:
-
-    def __init__(self, api_url):
+    def __init__(self, api_url: str):
         self.api_url = api_url
 
 
-    def fetch_data(self, is_stream):
+    def fetch_data(self, is_stream: bool, options: dict) -> Iterator:
         """
             fetch data using api_url
         """
@@ -17,7 +17,7 @@ class ExtractAPI:
 
 
 
-    def parse_data(self):
+    def parse_data(self, records: Iterator) -> Iterator:
         """
             parse data to a model
         """
