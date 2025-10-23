@@ -21,11 +21,14 @@ class ExtractMeteoDataCSV(ExtractAPI):
         for record in records:
             meteo = Meteo(
                 data = record["data"],
-                id = int(record["id"]),
-                humidite = int(record["humidite"]),
-                direction_du_vecteur_de_vent_max =
-                    int(record["direction_du_vecteur_de_vent_max"]),
-                pluie_intensite_max = float(record["pluie_intensite_max"]),
+                id = None if record["id"]=='' else int(record["id"]),
+                humidite = None if record["humidite"]=='' else int(record["humidite"]),
+                direction_du_vecteur_de_vent_max =(
+                    None
+                    if record["direction_du_vecteur_de_vent_max"]==''
+                    else int(record["direction_du_vecteur_de_vent_max"])),
+                pluie_intensite_max = None if record["pluie_intensite_max"]==''
+                else float(record["pluie_intensite_max"]),
                 pression = int(record["pression"]),
                 direction_du_vecteur_vent_moyen =
                     int(record["direction_du_vecteur_vent_moyen"]),
