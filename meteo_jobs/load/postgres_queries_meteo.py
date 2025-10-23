@@ -3,11 +3,16 @@ from typing import Iterator
 from .connector import DbQueries
 
 class PostgresQueriesMeteo(DbQueries):
+
+    def __init__(self, params: dict):
+        super().__init__()
+        self.station = params["station"]
+
     def query_create_table(self):
-        return """
-                CREATE TABLE IF NOT EXISTS meteo_data (
-                            id_nom VARCHAR(255) PRIMARY KEY,
-                            id_numero INT,
+        return f"""
+                CREATE TABLE IF NOT EXISTS meteo_{self.station} (
+                            data VARCHAR(255) PRIMARY KEY,
+                            id INT,
                             direction_du_vecteur_de_vent_max INT,
                             pluie_intensite_max FLOAT,
                             type_de_station VARCHAR(255),
@@ -21,17 +26,18 @@ class PostgresQueriesMeteo(DbQueries):
                             heure_utc VARCHAR(255),
                             heure_de_paris VARCHAR(255),
                             direction_du_vecteur_vent_moyen INT,
-                            UNIQUE (data_id)
+                            UNIQUE (data)
                         );
                 """
 
     def query_read_table(self):
-        return "SELECT * FROM meteo_data"
+        return f"SELECT * FROM meteo_{self.station}"
 
     def query_upsert_records(self):
-        return """
-    INSERT INTO meteo_data(
-            data_id,
+        return f"""
+    INSERT INTO meteo_{self.station}(
+            data,
+            id,
             direction_du_vecteur_de_vent_max,
             pluie_intensite_max,
             type_de_station,
@@ -47,25 +53,26 @@ class PostgresQueriesMeteo(DbQueries):
             direction_du_vecteur_vent_moyen
         )
         VALUES %s
-        ON CONFLICT (data_id) DO NOTHING
+        ON CONFLICT (data) DO NOTHING
 """
     def get_values(self, records: Iterator[Meteo]) -> list:
         values = [
             (
-                r.get("data"),
-                r.get("direction_du_vecteur_de_vent_max"),
-                r.get("pluie_intensite_max"),
-                r.get("type_de_station"),
-                r.get("direction_du_vecteur_de_rafale_de_vent_max"),
-                r.get("force_moyenne_du_vecteur_vent"),
-                r.get("force_rafale_max"),
-                r.get("temperature"),
-                r.get("humidite"),
-                r.get("pression"),
-                r.get("pluie"),
-                r.get("heure_utc"),
-                r.get("heure_de_paris"),
-                r.get("direction_du_vecteur_vent_moyen"),
+                r.data,
+                r.id,
+                r.direction_du_vecteur_de_vent_max,
+                r.pluie_intensite_max,
+                r.type_de_station,
+                r.direction_du_vecteur_de_rafale_de_vent_max,
+                r.force_moyenne_du_vecteur_vent,
+                r.force_rafale_max,
+                r.temperature,
+                r.humidite,
+                r.pression,
+                r.pluie,
+                r.heure_utc,
+                r.heure_de_paris,
+                r.direction_du_vecteur_vent_moyen,
             )
             for r in records
         ]

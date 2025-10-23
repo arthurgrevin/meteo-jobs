@@ -24,7 +24,7 @@ class PostgresQueriesStation(DbQueries):
                 """
 
     def query_read_table(self):
-        return "SELECT * FROM station"
+        return "SELECT * FROM station ORDER BY id_numero"
 
     def query_upsert_records(self):
         return """
@@ -50,20 +50,43 @@ class PostgresQueriesStation(DbQueries):
     def get_values(self, records: Iterator[Station]) -> list:
             values = [
                 (
-                    r.get("id_numero"),
-                    r.get("id_nom"),
-                    r.get("longitude"),
-                    r.get("latitude"),
-                    r.get("altitude"),
-                    r.get("emission"),
-                    r.get("installation"),
-                    r.get("type_stati"),
-                    r.get("lcz"),
-                    r.get("ville"),
-                    r.get("bati"),
-                    r.get("veg_haute"),
-                    r.get("geopoint")
+                    r.id_numero,
+                    r.id_nom,
+                    r.longitude,
+                    r.latitude,
+                    r.altitude,
+                    r.emission,
+                    r.installation,
+                    r.type_stati,
+                    r.lcz,
+                    r.ville,
+                    r.bati,
+                    r.veg_haute,
+                    r.geopoint
                 )
                 for r in records
             ]
             return values
+
+    def parse_data(self, result)->list[Station]:
+         stations = [
+              (
+                   Station(
+                        r[0],
+                        r[1],
+                        r[2],
+                        r[3],
+                        r[4],
+                        r[5],
+                        r[6],
+                        r[7],
+                        r[8],
+                        r[9],
+                        r[10],
+                        r[11],
+                        r[12])
+              )
+
+              for r in result
+         ]
+         return stations

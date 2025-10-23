@@ -36,16 +36,6 @@ def cleanup():
     loader.close()
     print("After Tests")
 
-
-def test_load_record():
-    """
-    It should be able to upsert record to postgres
-    """
-    loader.upsert_records(iter(records_test))
-    records = loader.read_data()
-    print(records)
-    assert len(records) == 1
-
 def test_load_station():
     """
     it should be able to upsert a station data
@@ -65,7 +55,7 @@ def test_load_station():
         veg_haute = "49491.6382",
         geopoint = '43.5949312, 1.449093882'
     )
-    stations = iter([station.__dict__])
+    stations = iter([station])
     loader.upsert_records(stations)
     records = loader.read_data()
     print(records)
