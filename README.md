@@ -3,12 +3,12 @@
 
 ## Ideas and Roadmap
 
-- Add Transform on Database(for now postgres) using dbt(?)
+- Add Transform on Database(for now postgres) using dbt(?)<br>
   It should properly perform data cleaning
-- Add Visual
+- Add Visual<br>
   to investigate
-- Stations extract and load should be a end to end process
-  meteos extract and load should be launch from another process
+- Stations extract and load should be a end to end process<br>
+  meteos extract and load should be launch from another process<br>
   investigate using Event based/Message Service
 - implement connector to another database(BigQuery ?)
 - continue to refactor using Typings(improve error handling)
