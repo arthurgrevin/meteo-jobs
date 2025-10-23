@@ -1,10 +1,15 @@
 from .meteo_postgres_loader import MeteoPostgresLoader
 from .connector import Connector, DbQueries
 from .loader import Loader
-from .postgres_connector_meteo import PostGresQueriesMeteo, PostGresConnectorMeteo
+from .postgres_connector import PostgresConnector
+from .postgres_queries_meteo import PostgresQueriesMeteo
+from .postgres_queries_station import PostgresQueriesStation
 
 __all__ = ['MeteoPostgresLoader',
            "Connector",
            "DbQueries",
-           "PostGresQueriesMeteo",
-           "PostGresConnectorMeteo"]
+           "PostgresQueriesMeteo",
+           "PostgresConnector",
+           "PostgresQueriesStation",
+           "Loader"
+           ]

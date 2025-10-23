@@ -1,4 +1,4 @@
-from meteo_jobs.load import PostGresConnectorMeteo, Loader
+from meteo_jobs.load import PostgresConnector, Loader, PostgresQueriesMeteo
 from meteo_jobs.models import Meteo
 import pytest
 
@@ -18,14 +18,15 @@ records_test = [{'data': '0195236c9af000002c882c00',
                'temperature': 0.6,
                'heure_de_paris': '2021-12-21T06:30:00+00:00',
                'heure_utc': '2021-12-21T06:30:00+00:00'}]
-
-loader = Loader(PostGresConnectorMeteo(
+connector = PostgresConnector(
         host="localhost",
         port=5432,
         dbname="meteo_db_test",
         user="meteo_user",
-        password="meteo_pass"
-    ))
+        password="meteo_pass",
+        db_queries= PostgresQueriesMeteo()
+    )
+loader = Loader(connector)
 
 
 @pytest.fixture(scope="module", autouse=True)
