@@ -17,5 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upsert to Postgres using iterator
 - Add Dockerfile to build docker to run EL process
 - Use python typings and dependencies injector
+- Add Station EL process
+- Add ActionStation to launch subprocess to EL meteo
 
 ### Changed

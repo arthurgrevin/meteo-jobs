@@ -1,6 +1,8 @@
 from .action import Action
 from typing import Iterator
 from meteo_jobs.models import Station
+import subprocess
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 
 class ActionStation(Action):
@@ -8,11 +10,35 @@ class ActionStation(Action):
     def __init__(self):
         """"""
 
-    def __launch_meteo_extract():
+    def _launch_meteo_extract(self, station_name):
         """Launch a process to start extract meteo for one station"""
+        log_file = f"{station_name}_extract.log"
+        cmd = ["python3.12", "start_EL_meteo.py", "--station", station_name]
+        print(f"Launch for {station_name}")
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        with open(log_file, "w") as f:
+            result = subprocess.run(
+                cmd,
+                stdout=f,        # redirige stdout vers le fichier
+                stderr=subprocess.STDOUT,  # redirige stderr aussi
+                text=True
+            )
+        print(f"End for {station_name}")
+        return station_name, result.returncode, log_file, result.stderr
+
 
 
     def execute(self, records: Iterator[Station]) -> Iterator[Station]:
-        for station in records:
-            print(f"execute for {station.id_nom}")
-            yield station
+        with ProcessPoolExecutor(max_workers=3) as executor:
+            futures = {
+                executor.submit(self._launch_meteo_extract, station.id_nom): station
+                for station in records
+            }
+
+        for future in as_completed(futures):
+                station = futures[future]
+                name, code, out, err = future.result()
+                print(f"{name} is finished with {code}")
+                if err:
+                     print(f"{name} error with {err}")
+                yield station

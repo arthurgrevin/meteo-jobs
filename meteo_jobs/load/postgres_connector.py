@@ -38,11 +38,12 @@ class PostgresConnector(Connector):
         """Create table is does not exist"""
         with self.conn.cursor() as cur:
             cur.execute(self.db_queries.query_create_table())
+        self.conn.commit()
 
     def upsert_records(self, records: Iterator, batch_size:int=10000):
         """
         Upsert records
-        :param records: iterator[dict]
+        :param records: iterator
         """
         if not records:
             print("No records to upsert")
@@ -55,6 +56,7 @@ class PostgresConnector(Connector):
 
             with self.conn.cursor() as cur:
                 execute_values(cur, self.db_queries.query_upsert_records(), values)
+            self.conn.commit()
             print(f"{len(batch)} records upsert in PostgreSQL")
         print("End of upsert")
 
