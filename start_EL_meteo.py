@@ -1,6 +1,7 @@
 from meteo_jobs.extract import Extract, ExtractMeteoDataCSV
 from meteo_jobs.load import Loader, PostgresConnector, PostgresQueriesMeteo
 import os
+import re
 import argparse
 
 
@@ -34,12 +35,13 @@ if __name__ == "__main__":
         dbname = DB_NAME,
         user = DB_USER,
         password = DB_PASSWD,
-        db_queries = PostgresQueriesMeteo()
+        db_queries = PostgresQueriesMeteo(
+            params= {"station": re.sub(r'[^a-z0-9_]', '_', station)})
     )
     loader = Loader(connector)
     records = extract.fetch_data(options = {'delimiter':";"})
     meteos = extract.parse_data(records)
-    loader.upsert_records(records)
+    loader.upsert_records(meteos)
     loader.close()
 
     print("End of Extract and Load")

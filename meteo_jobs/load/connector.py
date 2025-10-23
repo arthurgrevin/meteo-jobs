@@ -3,8 +3,9 @@ from typing import Protocol, Iterator
 
 class DbQueries:
 
-    def __init__(self):
+    def __init__(self, params: dict = {}):
         """"""
+        self.params = params
 
     def query_create_table(self)->str:
         """Get Query to create table"""
@@ -14,6 +15,12 @@ class DbQueries:
 
     def query_upsert_records(self)->str:
         """Get Query to upsert data"""
+
+    def get_values(self, records: Iterator) -> list:
+        """format records to values to be loaded"""
+
+    def parse_data(self, result: list) -> list:
+        """parse query result into model"""
 
 class Connector(Protocol):
 
@@ -46,6 +53,3 @@ class Connector(Protocol):
 
     def close(self):
         """Close connection"""
-
-    def get_values(self, records: Iterator) -> list:
-        """format records to values to be loaded"""

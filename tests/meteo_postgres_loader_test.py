@@ -24,7 +24,7 @@ connector = PostgresConnector(
         dbname="meteo_db_test",
         user="meteo_user",
         password="meteo_pass",
-        db_queries= PostgresQueriesMeteo()
+        db_queries= PostgresQueriesMeteo(params= {"station": "test"})
     )
 loader = Loader(connector)
 
@@ -37,16 +37,6 @@ def cleanup():
     # Code exécuté après tous les tests du module
     loader.close()
     print("After Tests")
-
-
-def test_load_record():
-    """
-    It should be able to upsert record to postgres
-    """
-    loader.upsert_records(iter(records_test))
-    records = loader.read_data()
-    print(records)
-    assert len(records) == 1
 
 def test_load_meteo():
     """
@@ -69,7 +59,7 @@ def test_load_meteo():
         heure_de_paris = '2021-12-21T06:30:00+00:00',
         heure_utc = '2021-12-21T06:30:00+00:00'
     )
-    meteos = iter([meteo.__dict__])
+    meteos = iter([meteo])
     loader.upsert_records(meteos)
     records = loader.read_data()
     print(records)
