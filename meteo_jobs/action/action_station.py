@@ -1,8 +1,6 @@
 from .action import Action
 from typing import Iterator
 from meteo_jobs.models import Station
-import subprocess
-
 
 
 class ActionStation(Action):
