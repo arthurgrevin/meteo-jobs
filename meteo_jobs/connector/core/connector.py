@@ -8,3 +8,9 @@ class Connector(Protocol):
 
     def parse_data(self, records: Iterator) -> Iterator:
         """Parse records"""
+
+    def connect(self):
+        """connect"""
+
+    def close(self):
+        """"""

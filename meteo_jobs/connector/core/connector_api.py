@@ -28,3 +28,9 @@ class ConnectorAPI(Connector):
             parse data to a model
         """
         return records
+
+    def connect(self):
+        return super().connect()
+
+    def close(self):
+        return super().close()

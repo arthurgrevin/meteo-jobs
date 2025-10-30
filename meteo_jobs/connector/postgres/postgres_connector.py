@@ -22,16 +22,17 @@ class PostgresConnector(ConnectorDB):
                          user=user,
                          password=password,
                          db_queries=db_queries)
-        self.conn = self.connect()
+        self.conn = None
 
     def connect(self):
-        return psycopg2.connect(
+        self.conn = psycopg2.connect(
             host=self.host,
             port=self.port,
             dbname=self.dbname,
             user=self.user,
             password=self.password
         )
+        return self.conn
 
     def create_table(self):
         """Create table is does not exist"""
